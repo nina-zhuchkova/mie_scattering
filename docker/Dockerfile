@@ -1,34 +1,21 @@
-# Используем официальный образ Ubuntu 22.04
-FROM ubuntu:22.04  
+# Используем официальный образ Ubuntu
+FROM ubuntu:22.04
 
-# Установка зависимостей
+# Устанавливаем зависимости
 RUN apt update && apt install -y \
-    build-essential cmake gdb \
-    mesa-utils x11-apps libx11-6 \
-    git wget vim  
+    libglu1-mesa-dev \
+    freeglut3-dev \
+    mesa-common-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Gmsh вручную
-RUN wget -q https://gmsh.info/bin/Linux/gmsh-4.11.1-Linux64.tgz && \
-    tar -xzf gmsh-4.11.1-Linux64.tgz -C /usr/local && \
-    rm gmsh-4.11.1-Linux64.tgz
+# Устанавливаем Gmsh для C++
+RUN apt update && apt install -y gmsh
 
-# Устанавливаем переменные среды для Gmsh
-ENV PATH="/usr/local/gmsh-4.11.1-Linux64/bin:$PATH"
-ENV GMSH_DIR="/usr/local/gmsh-4.11.1-Linux64/lib/cmake/gmsh"
-ENV CMAKE_PREFIX_PATH="/usr/local/gmsh-4.11.1-Linux64/lib/cmake:$CMAKE_PREFIX_PATH"
+# Устанавливаем Gmsh для Python
+RUN pip3 install gmsh
 
-# Устанавливаем рабочую директорию
-WORKDIR /app  
+# Копируем файлы из папки src в контейнер
+COPY ./src /app/src
 
-# Копируем исходный код проекта внутрь контейнера
-COPY src /app  
-
-# Создаём папку для сборки
-RUN mkdir -p build  
-
-# Компиляция проекта
-WORKDIR /app/build
-RUN cmake .. && make  
-
-# Команда по умолчанию (интерактивная оболочка)
-CMD ["bash"]
+# Устанавливаем точку входа в контейнер
+CMD ["/bin/bash"]
