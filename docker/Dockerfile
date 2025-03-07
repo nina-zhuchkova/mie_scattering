@@ -6,6 +6,7 @@ RUN apt update && apt install -y \
     libglu1-mesa-dev \
     freeglut3-dev \
     mesa-common-dev \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем Gmsh для C++
