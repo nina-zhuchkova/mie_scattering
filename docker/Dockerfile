@@ -1,22 +1,21 @@
-# Используем официальный образ Ubuntu
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
-# Устанавливаем зависимости
-RUN apt update && apt install -y \
-    libglu1-mesa-dev \
-    freeglut3-dev \
-    mesa-common-dev \
-    python3-pip \
+# Устанавливаем необходимые пакеты для компиляции, gmsh и другие зависимости
+RUN apt-get update && apt-get install -y \
+    g++ \
+    make \
+    gmsh \
+    libgmsh-dev \     
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Gmsh для C++
-RUN apt update && apt install -y gmsh
+# Копируем папку src из корневой директории в контейнер
+COPY ./src /src
+COPY ./docker/run.sh /run.sh
 
-# Устанавливаем Gmsh для Python
-RUN pip3 install gmsh
+RUN chmod +x /run.sh
 
-# Копируем файлы из папки src в контейнер
-COPY ./src /app/src
+# Переходим в директорию с исходным кодом и компилируем его
 
-# Устанавливаем точку входа в контейнер
-CMD ["/bin/bash"]
+CMD ["/run.sh"]
+
+# Запуск gmsh и выполнения программы

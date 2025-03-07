@@ -1,0 +1,10 @@
+
+services:
+  cpp-gmsh:
+    build:
+      context: ../                # Указываем контекст как родительскую папку
+      dockerfile: docker/Dockerfile  # Путь к Dockerfile, который в папке docker
+    volumes:
+      - ../src:/src                # Монтируем src из родительской директории в контейнер
+    working_dir: /src               # Указываем рабочую директорию в контейнере
+    tty: true                       # Для интерактивной работы с контейнером (если нужно)
