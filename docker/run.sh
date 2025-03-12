@@ -2,6 +2,7 @@
 
 # Компиляция кода (если нужно)
 g++ -o main main.cpp -I/usr/include/gmsh -lgmsh
+g++ -o example example.cpp -I/usr/include/gmsh -lgmsh
 
 ./main
 # Запуск GMSH с файлом model.geo
