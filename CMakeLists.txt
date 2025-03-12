@@ -1,16 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
-project(gmsh_only)
+project(MyGmshProject)
 
-# Указываем стандарт C++
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-# Используем переменную окружения для GMSH
-if(DEFINED ENV{GMSH_DIR})
-    set(GMSH_DIR $ENV{GMSH_DIR})
-endif()
-# Находим GMSH
-find_package(GMSH REQUIRED)
+# Явно указываем пути к заголовкам и библиотеке
+include_directories(/usr/include/gmsh)
+link_directories(/usr/lib)
 
-# Добавляем исходные файлы
-add_executable(test_gmsh test_gmsh.cpp)
-target_link_libraries(test_gmsh GMSH::GMSH)
+# Добавляем исполняемые файлы
+add_executable(main src/main.cpp)
+add_executable(example src/example.cpp)
+
+# Линкуем с Gmsh
+target_link_libraries(main gmsh)
+target_link_libraries(example gmsh)
+
+# Добавляем цель для запуска программ
+add_custom_target(run ALL
+    COMMAND ./main && ./example
+    DEPENDS main example
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)

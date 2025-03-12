@@ -5,20 +5,30 @@ RUN apt-get update && apt-get install -y \
     x11-apps \
     g++ \
     make \
+    cmake \
     gmsh \
     libgmsh-dev \     
     && rm -rf /var/lib/apt/lists/*
 
-# Копируем папку src из корневой директории в контейнер
-COPY ./src /src
-COPY ./docker/run.sh /run.sh
+# Создаём рабочую директорию
+WORKDIR /app
+
+# Копируем CMakeLists.txt из корня проекта
+COPY CMakeLists.txt /app/
+
+# Копируем исходники из src/
+COPY ./src /app/src
+
+# Создаём папку для сборки
+RUN mkdir build
+WORKDIR /app/build
+
+# Запускаем CMake и сборку
+RUN cmake .. && make
 
 ENV DISPLAY=:0
 
-RUN chmod +x /run.sh
+RUN apt-get install -y x11-xserver-utils
 
-# Переходим в директорию с исходным кодом и компилируем его
-
-CMD ["/run.sh"]
-
-# Запуск gmsh и выполнения программы
+# Запускаем программу
+CMD ["./main"]
