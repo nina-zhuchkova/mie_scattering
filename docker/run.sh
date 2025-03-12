@@ -5,6 +5,7 @@ g++ -o main main.cpp -I/usr/include/gmsh -lgmsh
 g++ -o example example.cpp -I/usr/include/gmsh -lgmsh
 
 ./main
+./example
 # Запуск GMSH с файлом model.geo
 # gmsh -2 model.geo
 
