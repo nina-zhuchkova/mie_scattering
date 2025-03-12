@@ -1,37 +1,21 @@
-# Используем официальный образ Ubuntu
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
-# Устанавливаем зависимости
-RUN apt update && apt install -y \
-    python3 \
-    python3-pip \
-    cmake \
+# Устанавливаем необходимые пакеты для компиляции, gmsh и другие зависимости
+RUN apt-get update && apt-get install -y \
     g++ \
+    make \
     gmsh \
+    libgmsh-dev \     
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /usr/bin/python3 /usr/bin/python
-# Устанавливаем GMSH для Python
-RUN pip3 install gmsh
+# Копируем папку src из корневой директории в контейнер
+COPY ./src /src
+COPY ./docker/run.sh /run.sh
 
-# Устанавливаем переменную окружения для GMSH
-ENV GMSH_DIR=/usr
+RUN chmod +x /run.sh
 
-# Проверка версий CMake и GMSH
-RUN cmake --version
-RUN gmsh --version
+# Переходим в директорию с исходным кодом и компилируем его
 
-# Копируем файлы из папки src в контейнер
-COPY ./src /app/src
+CMD ["/run.sh"]
 
-# Копируем CMakeLists.txt
-COPY ./CMakeLists.txt /app/
-
-# Переходим в директорию с проектом и выполняем сборку
-WORKDIR /app
-
-# Создаем директорию для сборки и выполняем сборку в одном RUN шаге
-RUN mkdir -p build && cd build && cmake .. && make
-
-# Устанавливаем точку входа в контейнер
-CMD ["/bin/bash"]
+# Запуск gmsh и выполнения программы
