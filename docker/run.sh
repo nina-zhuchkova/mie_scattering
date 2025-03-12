@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Компиляция кода (если нужно)
-g++ -o main main.cpp -I/usr/include/gmsh -lgmsh
-g++ -o example example.cpp -I/usr/include/gmsh -lgmsh
+cd ..
+cd app/build
 
 ./main
 ./example

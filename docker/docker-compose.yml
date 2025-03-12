@@ -12,3 +12,4 @@ services:
     working_dir: /src               # Указываем рабочую директорию в контейнере
     tty: true                       # Для интерактивной работы с контейнером (если нужно)
     network_mode: "host"
+    privileged: true
