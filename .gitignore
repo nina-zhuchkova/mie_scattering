@@ -2,5 +2,9 @@ docs/*
 !docs/
 !docs/*.md
 build/
+build-docker/
+__pycache__/
+scripts/__pycache__/
+ufl/__pycache__/
 results/*
 !results/.gitkeep

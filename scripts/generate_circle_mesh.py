@@ -9,8 +9,7 @@ from pathlib import Path
 import gmsh  # type: ignore
 from mpi4py import MPI
 
-from dolfinx import io
-from dolfinx.io import XDMFFile
+from dolfinx.io import XDMFFile, gmsh as dolfinx_gmsh
 
 
 def write_mesh(name: str, xdmf_path: Path, mesh_data) -> None:
@@ -55,14 +54,18 @@ def main() -> None:
     xdmf_path.parent.mkdir(parents=True, exist_ok=True)
 
     gmsh.initialize()
-    gmsh.option.setNumber("General.Terminal", 1)
-    gmsh.open(str(geo_path))
-    gmsh.model.mesh.generate(args.dim)
-    gmsh.model.mesh.setOrder(1)
+    try:
+        gmsh.option.setNumber("General.Terminal", 1)
+        gmsh.open(str(geo_path))
+        gmsh.model.mesh.generate(args.dim)
+        gmsh.model.mesh.setOrder(1)
 
-    mesh_data = io.gmsh.model_to_mesh(gmsh.model, MPI.COMM_WORLD, 0, gdim=args.gdim)
-    write_mesh(args.name, xdmf_path, mesh_data)
-    gmsh.finalize()
+        mesh_data = dolfinx_gmsh.model_to_mesh(
+            gmsh.model, MPI.COMM_WORLD, 0, gdim=args.gdim
+        )
+        write_mesh(args.name, xdmf_path, mesh_data)
+    finally:
+        gmsh.finalize()
 
 
 if __name__ == "__main__":

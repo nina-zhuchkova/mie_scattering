@@ -109,7 +109,7 @@
 Приоритетный путь для `DOLFINx`:
 
 - строить геометрию в `gmsh`;
-- передавать ее в `dolfinx` штатным способом через `gmshio.model_to_mesh`.
+- передавать ее в `dolfinx` штатным способом через `dolfinx.io.gmsh.model_to_mesh`.
 
 Запасной путь:
 
@@ -230,7 +230,7 @@ ufl/
 
 Предпочтительный путь:
 
-- импорт через `gmshio.model_to_mesh`.
+- импорт через `dolfinx.io.gmsh.model_to_mesh`.
 
 Запасной путь:
 
