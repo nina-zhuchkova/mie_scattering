@@ -1,0 +1,6 @@
+docs/*
+!docs/
+!docs/*.md
+build/
+results/*
+!results/.gitkeep
